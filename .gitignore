@@ -1,3 +1,7 @@
+#Specific to the bot: Avoid sharing data of guilds
+guilds_data/*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
