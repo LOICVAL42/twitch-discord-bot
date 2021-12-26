@@ -26,7 +26,17 @@ async def monitoring():
         if len(raw_data["data"]) == 0:
             is_live = False
         elif not is_live:
-            await channel.send(f"@everyone ! Le streameur {streamer} est en live !")
+            data = raw_data["data"][0]
+            embed = discord.Embed(title=data["title"],
+                                  url=f"https://www.twitch.tv/{data['user_login']}",
+                                  description=f"{data['user_name']} est en live"
+                                  f" sur : {data['game_name']} !")
+            embed.set_author(name=f"{data['user_name']} est en live !",
+                             url=f"https://www.twitch.tv/{data['user_login']}",
+                             icon_url=
+                             "https://icones.pro/wp-content/uploads/2021/05/symbole-twitch-logo-icone-rose.png")
+            embed.set_thumbnail(url=setload.read_value_in_guild(channel.guild.id, f"{streamer}_image"))
+            await channel.send("@everyone",embed=embed)
             is_live = True
         if (channel, streamer) not in stop_monitoring:
             new_to_monitor.put((channel, streamer, is_live))
@@ -76,7 +86,7 @@ async def start_monitoring_streamers(message, streamers):
     return
 
 def stop_monitoring_streamer(channel, streamer):
-    if not find_monitored_streamer(guild_id, streamer):
+    if not find_monitored_streamer(channel.guild.id, streamer):
         return
     stop_monitoring.append((channel, streamer))
     return

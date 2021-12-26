@@ -4,6 +4,7 @@ import asyncio
 import sox
 import time
 import discord
+import json
 from dotenv import load_dotenv
 import setload
 from multiprocessing import Process
@@ -93,6 +94,12 @@ async def on_message(message):
             streamers = setload.read_list_in_guild(guild_id, "streamers")
         streamers.append(cmd[2])
         setload.set_value_in_guild(guild_id, "streamers", streamers)
+        stream = os.popen(f"twitch api get users -q login={cmd[2]}")
+        json_f = stream.read()
+        stream.close()
+        raw_data = json.loads(json_f)
+        data = raw_data["data"][0]
+        setload.set_value_in_guild(guild_id, f"{cmd[2]}_image", data["profile_image_url"])
         if setload.read_value_in_guild(guild_id, "monitoringTwitch") == "True":
             await monitoringTwitch.start_monitoring_streamers(message, [cmd[2]])
         await message.channel.send("Nouveau streamer rajouté aux streamers "
@@ -168,6 +175,20 @@ async def on_message(message):
             return
         monitoringTwitch.stop_monitoring_all_streamers()
         await client.close()
+        return
+    '''
+    Test function for embed messages
+    '''
+    if cmd[1] == "testEmbed" or cmd[1] == "tE":
+        if len(cmd) != 2:
+            await message.channel.send("Mauvais format de commande.",
+                                       reference=message, mention_author=False)
+            return
+        embed=discord.Embed(title="Title",type="rich",description="description",
+                            url="https://www.google.fr/",colour=154)
+        await message.channel.send(embed=embed)
+        return
+
 
 def test():
     while True:
