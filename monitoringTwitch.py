@@ -35,7 +35,8 @@ async def monitoring():
                              url=f"https://www.twitch.tv/{data['user_login']}",
                              icon_url=
                              "https://icones.pro/wp-content/uploads/2021/05/symbole-twitch-logo-icone-rose.png")
-            embed.set_thumbnail(url=setload.read_value_in_guild(channel.guild.id, f"{streamer}_image"))
+            pfp = setload.read_value_in_guild(channel.guild.id, f"{data['user_login']}_image")
+            embed.set_thumbnail(url=pfp)
             await channel.send("@everyone",embed=embed)
             is_live = True
         if (channel, streamer) not in stop_monitoring:

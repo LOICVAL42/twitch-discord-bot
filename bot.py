@@ -47,7 +47,21 @@ async def on_message(message):
     if cmd[0] != prefix:
         return
     if len(cmd) == 1 or cmd[1] == "aide":
-        await message.channel.send("Aide en cours d'écriture...")
+        embed = discord.Embed()
+        embed.add_field(name="Aide",
+                        value="`defPrefixe` - Permet de définir un nouveau "
+                        "préfixe pour le bot.\n"
+                        "`defSalonTwitch` - Définit le salon ou seront envoyés "
+                        "les notifications relatives à Twitch.\n"
+                        "`ajoutStreamer` - Rajoute un streamer à la liste de "
+                        "ceux qui sont suivis.\n"
+                        "`retraitStreamer` - Enlève un streamer de ceux qui "
+                        "sont suivis.\n"
+                        "`debutNotifsTwitch` - Active les notifications "
+                        "venant de Twitch.\n"
+                        "`arretNotifsTwitch` - Arrête les notifications venant "
+                        "de Twitch")
+        await message.channel.send(embed=embed)
         return
     '''
     Change default channel for twitch notifications
@@ -71,6 +85,10 @@ async def on_message(message):
             await message.channel.send("Mauvais format de commande.",
                                        reference=message, mention_author=False)
             return
+        if not message.author.guild_permissions.administrator:
+            await message.channel.send("Vous n'avez pas les permissions.",
+                                       reference=message, mention_author = False)
+            return
         new_prefix = cmd[2]
         if new_prefix.find(" ") != -1:
             await message.channel.send("Le nouveau préfixe ne peut **pas** "
@@ -92,14 +110,14 @@ async def on_message(message):
             streamers = []
         else:
             streamers = setload.read_list_in_guild(guild_id, "streamers")
-        streamers.append(cmd[2])
+        streamers.append(cmd[2].lower())
         setload.set_value_in_guild(guild_id, "streamers", streamers)
         stream = os.popen(f"twitch api get users -q login={cmd[2]}")
         json_f = stream.read()
         stream.close()
         raw_data = json.loads(json_f)
         data = raw_data["data"][0]
-        setload.set_value_in_guild(guild_id, f"{cmd[2]}_image", data["profile_image_url"])
+        setload.set_value_in_guild(guild_id, f"{cmd[2].lower()}_image", data["profile_image_url"])
         if setload.read_value_in_guild(guild_id, "monitoringTwitch") == "True":
             await monitoringTwitch.start_monitoring_streamers(message, [cmd[2]])
         await message.channel.send("Nouveau streamer rajouté aux streamers "
@@ -188,12 +206,6 @@ async def on_message(message):
                             url="https://www.google.fr/",colour=154)
         await message.channel.send(embed=embed)
         return
-
-
-def test():
-    while True:
-        print("salut")
-        time.sleep(2)
 
 monitoringTwitch.monitoring.start()
 client.run(TOKEN)
