@@ -1,0 +1,9 @@
+discord
+os
+requests
+asyncio
+sox
+time
+json
+dotenv
+multiprocessing
