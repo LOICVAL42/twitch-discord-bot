@@ -1,7 +1,6 @@
 import os
 import requests
 import asyncio
-import sox
 import time
 import discord
 import json
