@@ -2,4 +2,3 @@ discord
 requests
 asyncio
 sox
-dotenv
