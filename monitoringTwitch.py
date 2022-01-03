@@ -19,7 +19,7 @@ async def monitoring():
     new_to_monitor = queue.SimpleQueue()
     while not to_monitor.empty():
         (channel, streamer, is_live) = to_monitor.get()
-        stream = os.popen(f"twitch api get streams -q user_login={streamer}")
+        stream = os.popen(f"./twitch api get streams -q user_login={streamer}")
         json_f = stream.read()
         stream.close()
         raw_data = json.loads(json_f)
