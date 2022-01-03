@@ -2,7 +2,5 @@ discord
 requests
 asyncio
 sox
-time
 json
 dotenv
-multiprocessing
