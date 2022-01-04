@@ -2,3 +2,4 @@ discord
 requests
 asyncio
 python-dotenv
+requests

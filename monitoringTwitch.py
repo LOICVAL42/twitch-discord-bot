@@ -7,7 +7,25 @@ import os
 import json
 from discord.ext import tasks
 import queue
+import requests
 
+# Generating keys & stuff idfk
+client_id = "iobrktq76jujywo6gtn01r48wt00jp"
+client_secret = "abpry72gcm2f5lrgs6edkxflj21pf5"
+
+body = {
+    'client_id': client_id,
+    'client_secret': client_secret,
+    'grant_type': 'client_credentials',
+}
+
+r = requests.post("https://id.twitch.tv/oauth2/token", body)
+keys = r.json()
+print(keys)
+headers = {
+    'Client-ID': client_id,
+    'Authorization': 'Bearer ' + keys['access_token']
+}
 
 to_monitor = queue.SimpleQueue()
 monitored = []
@@ -19,10 +37,9 @@ async def monitoring():
     new_to_monitor = queue.SimpleQueue()
     while not to_monitor.empty():
         (channel, streamer, is_live) = to_monitor.get()
-        stream = os.popen(f"./twitch api get streams -q user_login={streamer}")
-        json_f = stream.read()
+        stream = requests.get("https://api.twitch.tv/helix/streams?user_login=" + streamer, headers=headers)
+        raw_data = stream.json()
         stream.close()
-        raw_data = json.loads(json_f)
         if len(raw_data["data"]) == 0:
             is_live = False
         elif not is_live:

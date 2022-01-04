@@ -207,7 +207,7 @@ async def on_message(message):
         await message.channel.send(embed=embed)
         return
 
-os.system("./twitch token")
+os.system("python monitoringTwitch.py")
 monitoringTwitch.monitoring.start()
 client.run(TOKEN)
 print("Bot éteint avec succès. Bonne nuit.")
