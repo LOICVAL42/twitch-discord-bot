@@ -30,7 +30,7 @@ if not os.path.exists("client_infos/auth"):
     file.write(client_id)
     file.close()
     file = open("client_infos/auth", "w")
-    file.write('Bearer' + keys['access_token'])
+    file.write('Bearer ' + keys['access_token'])
 else:
     filecid = open("client_infos/client_id")
     fileauth = open("client_infos/auth")
