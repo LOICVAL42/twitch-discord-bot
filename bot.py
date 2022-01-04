@@ -112,10 +112,8 @@ async def on_message(message):
             streamers = setload.read_list_in_guild(guild_id, "streamers")
         streamers.append(cmd[2].lower())
         setload.set_value_in_guild(guild_id, "streamers", streamers)
-        stream = os.popen(f"twitch api get users -q login={cmd[2]}")
-        json_f = stream.read()
-        stream.close()
-        raw_data = json.loads(json_f)
+        stream = requests.get("https://api.twitch.tv/helix/users?login=" + cmd[2], headers=headers)
+        raw_data = stream.json()
         data = raw_data["data"][0]
         setload.set_value_in_guild(guild_id, f"{cmd[2].lower()}_image", data["profile_image_url"])
         if setload.read_value_in_guild(guild_id, "monitoringTwitch") == "True":
@@ -208,6 +206,14 @@ async def on_message(message):
         return
 
 os.system("python monitoringTwitch.py")
+filecid = open("client_infos/client_id")
+fileauth = open("client_infos/auth")
+headers = {
+    'Client-ID': filecid.read(),
+    'Authorization': fileauth.read()
+}
+filecid.close()
+fileauth.close()
 monitoringTwitch.monitoring.start()
 client.run(TOKEN)
 print("Bot éteint avec succès. Bonne nuit.")

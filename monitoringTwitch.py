@@ -11,21 +11,27 @@ import requests
 
 # Generating keys & stuff idfk
 client_id = "iobrktq76jujywo6gtn01r48wt00jp"
-client_secret = "abpry72gcm2f5lrgs6edkxflj21pf5"
+client_secret = "u199w1b70l1e3gdihcz9t3vwtb85ua"
 
-body = {
-    'client_id': client_id,
-    'client_secret': client_secret,
-    'grant_type': 'client_credentials',
-}
+if not os.path.exists("client_infos/auth"):
+    body = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'grant_type': 'client_credentials',
+    }
+    r = requests.post("https://id.twitch.tv/oauth2/token", body)
+    keys = r.json()
+    print(keys)
+    headers = {
+        'Client-ID': client_id,
+        'Authorization': 'Bearer ' + keys['access_token']
+    }
+    file = open("client_infos/client_id", "w")
+    file.write(client_id)
+    file.close()
+    file = open("client_infos/auth", "w")
+    file.write('Bearer' + keys['access_token'])
 
-r = requests.post("https://id.twitch.tv/oauth2/token", body)
-keys = r.json()
-print(keys)
-headers = {
-    'Client-ID': client_id,
-    'Authorization': 'Bearer ' + keys['access_token']
-}
 
 to_monitor = queue.SimpleQueue()
 monitored = []
