@@ -32,6 +32,8 @@ if not os.path.exists("client_infos/auth"):
     file = open("client_infos/auth", "w")
     file.write('Bearer' + keys['access_token'])
 else:
+    filecid = open("client_infos/client_id")
+    fileauth = open("client_infos/auth")
     headers = {
         'Client-ID': filecid.read(),
         'Authorization': fileauth.read()
