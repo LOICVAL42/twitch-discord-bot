@@ -31,6 +31,11 @@ if not os.path.exists("client_infos/auth"):
     file.close()
     file = open("client_infos/auth", "w")
     file.write('Bearer' + keys['access_token'])
+else:
+    headers = {
+        'Client-ID': filecid.read(),
+        'Authorization': fileauth.read()
+    }
 
 
 to_monitor = queue.SimpleQueue()
