@@ -38,6 +38,8 @@ else:
         'Client-ID': filecid.read(),
         'Authorization': fileauth.read()
     }
+    filecid.close()
+    fileauth.close()
 
 
 to_monitor = queue.SimpleQueue()
