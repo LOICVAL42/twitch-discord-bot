@@ -122,3 +122,4 @@ dmypy.json
 
 #Guilds_data
 guilds_data/*
+client_infos/*
