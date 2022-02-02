@@ -8,10 +8,11 @@ import json
 from discord.ext import tasks
 import queue
 import requests
+import random
 
 # Generating keys & stuff idfk
 client_id = "iobrktq76jujywo6gtn01r48wt00jp"
-client_secret = "u199w1b70l1e3gdihcz9t3vwtb85ua"
+client_secret = "tcjv0964jjzpq8ueq7lp0273f5ig37"
 
 if not os.path.exists("client_infos/auth"):
     body = {
@@ -46,6 +47,19 @@ to_monitor = queue.SimpleQueue()
 monitored = []
 stop_monitoring = []
 
+async def add_random_emojis(message, max_emojis):
+    guild_emojis = message.guild.emojis
+    if (max_emojis > len(guild_emojis)):
+        max_emojis = len(guild_emojis)
+    nb_emojis = random.randrange(max_emojis) + 1
+    emojis = []
+    while len(emojis) < nb_emojis:
+        emoji = random.choice(guild_emojis)
+        if not emoji in emojis:
+            emojis.append(emoji)
+    for emoji in emojis:
+        await message.add_reaction(emoji)
+
 @tasks.loop(seconds=10)
 async def monitoring():
     global to_monitor
@@ -69,7 +83,8 @@ async def monitoring():
                              "https://icones.pro/wp-content/uploads/2021/05/symbole-twitch-logo-icone-rose.png")
             pfp = setload.read_value_in_guild(channel.guild.id, f"{data['user_login']}_image")
             embed.set_thumbnail(url=pfp)
-            await channel.send("@everyone",embed=embed)
+            sent_message = await channel.send("@everyone",embed=embed)
+            await add_random_emojis(sent_message, 3)
             is_live = True
         if (channel, streamer) not in stop_monitoring:
             new_to_monitor.put((channel, streamer, is_live))

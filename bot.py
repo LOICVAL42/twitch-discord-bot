@@ -10,6 +10,7 @@ import setload
 from multiprocessing import Process
 import monitoringTwitch
 from discord.ext import tasks
+import random
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -205,6 +206,10 @@ async def on_message(message):
         await message.channel.send(embed=embed)
         return
 
+if not os.path.exists("client_infos"):
+    os.system("mkdir client_infos")
+if not os.path.exists("guilds_data"):
+    os.system("mkdir guilds_data")
 os.system("python monitoringTwitch.py")
 filecid = open("client_infos/client_id")
 fileauth = open("client_infos/auth")

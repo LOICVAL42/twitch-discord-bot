@@ -62,7 +62,6 @@ def read_int_list_in_guild(guild_id, value_name):
     Reads a list of int in a guild
     '''
     raw_value = read_list_in_guild(guild_id, value_name, True)
-    print(raw_value)
     value = []
     for raw in raw_value:
         value.append(int(raw))
