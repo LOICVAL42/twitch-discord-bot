@@ -69,11 +69,19 @@ async def on_message(message):
         await commands.stop_monitoring(message, cmd)
         return
     if cmd[1] == "arretBot" or cmd[1] == "aB":
+        '''
+        Stops the bot properly
+        '''
         if message.author.id != 275295502168358913:
             await message.channel.send("Vous n'avez pas cette permission.",
                                        reference=message, mention_author=False)
             return
-        await commands.stop_bot(message, cmd)
+        if len(cmd) != 2:
+            await message.channel.send("Mauvais format de commande.",
+                                       reference=message, mention_author=False)
+            return
+        monitoringTwitch.stop_monitoring_all_streamers()
+        await client.close()
         return
 
 if not os.path.exists("client_infos"):

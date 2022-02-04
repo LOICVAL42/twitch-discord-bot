@@ -157,16 +157,3 @@ async def stop_monitoring(message, cmd):
                                                setload.read_list_in_guild(message.guild.id, "streamers"))
     await message.channel.send("Désactivation du suivi des streamers.",
                                reference=message, mention_author=True)
-
-async def stop_bot(message, cmd):
-    '''
-    Stops the bot properly
-    '''
-    if len(cmd) != 2:
-        await message.channel.send("Mauvais format de commande.",
-                                   reference=message, mention_author=False)
-        return
-    monitoringTwitch.stop_monitoring_all_streamers()
-    await client.close()
-
-
